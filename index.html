@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skincare Planner</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #111;
+  color: #eee;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #1a1a1a;
+  border-radius: 20px;
+  /* padding: 30px; */
+  box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+}
+
+.header { text-align:center; margin-bottom:30px; }
+.header h1 {
+  font-size: 2.4em;
+  font-weight: bold;
+  color: #ccc;
+  letter-spacing: 1px;
+}
+.header p { color:#aaa; }
+
+.date-selector {
+  background: #222;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.date-controls {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:15px;
+}
+
+.date-controls button {
+  background: linear-gradient(145deg,#bbb,#888);
+  color:#111;
+  border:1px solid #888;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:1.1em;
+  transition: all 0.3s;
+}
+.date-controls button:hover {
+  background: linear-gradient(145deg,#ddd,#aaa);
+}
+
+.date-controls input {
+       width: 130px;
+  background:#111;
+  color:#eee;
+  border:1px solid #444;
+  border-radius:8px;
+  padding:8px 12px;
+  text-align:center;
+  font-size:1em;
+}
+
+.date-info {
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  font-weight:600;
+  color:#ddd;
+}
+
+.current-week-info,
+.break-week {
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+  margin-bottom:20px;
+  font-weight:bold;
+  background:#2a2a2a;
+  border:1px solid #444;
+}
+
+.routines-container {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
+}
+
+.routine-card {
+  background:#1e1e1e;
+  border-radius:15px;
+  padding:10px;
+  border:1px solid #333;
+  box-shadow:0 8px 20px rgba(0,0,0,0.5);
+  transition: transform 0.3s;
+}
+.routine-card:hover { transform:translateY(-5px); }
+
+.routine-header {
+  display:flex;
+  align-items:center;
+  margin-bottom:20px;
+  padding-bottom:15px;
+  border-bottom:1px solid #333;
+}
+.routine-icon { font-size:1.8em; margin-right:12px; }
+.routine-title { font-size:1.3em; color:#ccc; }
+
+.routine-name {
+  display:inline-block;
+  background:#2a2a2a;
+  color:#ccc;
+  padding:6px 14px;
+  border-radius:20px;
+  margin-bottom:20px;
+  font-size:0.9em;
+}
+
+.products-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
+  gap:2px;
+}
+
+.product-item {
+  text-align:center;
+  background:#2a2a2a;
+  border:1px solid #333;
+  border-radius:10px;
+  /* padding:12px; */
+  transition: transform 0.3s;
+}
+.product-item:hover { transform: scale(1.05); }
+
+.product-image {
+  width:70px; height:70px;
+  margin:0 auto 10px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:8px;
+  overflow:hidden;
+}
+.product-image img { width:100%; height:100%; object-fit:contain; }
+
+.evening-cycle {
+  background:#222;
+  border:1px solid #333;
+  padding:8px;
+  border-radius:8px;
+  margin-bottom:12px;
+  text-align:center;
+  font-weight:500;
+  color:#ccc;
+}
+
+.today-highlight {
+  background:#333;
+  border:1px solid #555;
+  color:#fff;
+  padding:8px;
+  border-radius:6px;
+  text-align:center;
+  margin-bottom:12px;
+  font-weight:bold;
+}
+
+.hidden { display:none; }
+
+@media(max-width:768px){
+  .routines-container { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  
+
+  <div class="date-selector">
+    <div class="date-controls">
+      <button id="prevDay">←</button>
+      <!-- <input id="dateInput" type="date" value="2025-08-28"/> -->
+      <input id="dateInput" type="text" readonly/>
+      <button id="nextDay">→</button>
+    </div>
+
+   
+
+    <div class="date-info">
+      <div>📅 Day: <span id="dayNumber"></span></div>
+      <div>📆 Week: <span id="weekNumber"></span></div>
+      <div>🗓️ <span id="dayOfWeek"></span></div>
+    </div>
+  </div>
+
+  <div id="currentWeekInfo" class="current-week-info"><h3></h3></div>
+  <div id="breakWeek" class="break-week hidden"><h3>🌸 BREAK WEEK 🌸</h3><p>Time for skin recovery</p></div>
+
+  <div class="routines-container">
+    <div class="routine-card morning">
+      <div class="routine-header">
+        <h2 class="routine-title">Morning</h2>
+      </div>
+      <div id="morningProducts" class="products-grid"></div>
+    </div>
+
+    <div class="routine-card evening">
+      <div class="routine-header">
+        <h2 class="routine-title">Evening</h2>
+      </div>
+      <div id="eveningProducts" class="products-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const routines = {
+  Detox: { name: 'Detox', products:[3,1] },
+  MorningLight:{ name:'Morning Light', products:[7,4,1] },
+  EveningLight:{ name:'Evening Light', products:[7,1] },
+  MorningIntensive:{ name:'Morning Intensive', products:[7,4,9,6] },
+  EveningIntensive:{ name:'Evening Intensive', products:[2,5,8] }
+};
+
+const startDate = new Date('2025-08-28');
+let currentDate = new Date();
+
+const dateInput = document.getElementById('dateInput');
+const prevDayBtn = document.getElementById('prevDay');
+const nextDayBtn = document.getElementById('nextDay');
+const todayHighlight = document.getElementById('todayHighlight');
+const dayNumber = document.getElementById('dayNumber');
+const weekNumber = document.getElementById('weekNumber');
+const dayOfWeek = document.getElementById('dayOfWeek');
+const currentWeekInfo = document.getElementById('currentWeekInfo');
+const breakWeek = document.getElementById('breakWeek');
+const morningProducts = document.getElementById('morningProducts');
+const eveningProducts = document.getElementById('eveningProducts');
+
+dateInput.value = formatDateDDMMYYYY(currentDate);
+
+function getDayOfProgram(date){ return Math.floor((date - startDate)/(1000*60*60*24))+1; }
+function getWeekOfProgram(date){ return Math.ceil(getDayOfProgram(date)/7); }
+function getDayOfWeekName(date){ return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][date.getDay()]; }
+function isBreakWeek(weekNum){ return weekNum>8 && (weekNum-8)%3===0; }
+
+function getMorningRoutine(weekNum){
+  if(weekNum===1) return routines.Detox;
+  else if(weekNum<=3) return routines.MorningLight;
+  else if(weekNum<=8) return routines.MorningIntensive;
+  else return isBreakWeek(weekNum)? routines.MorningLight : routines.MorningIntensive;
+}
+function getEveningRoutine(weekNum,dayNum){
+  if(weekNum===1) return routines.Detox;
+  else if(weekNum<=8) return (dayNum%2===0)? routines.EveningIntensive : routines.EveningLight;
+  else return isBreakWeek(weekNum)? routines.Detox : ((dayNum%2===0)? routines.EveningIntensive : routines.EveningLight);
+}
+function getEveningCycleInfo(weekNum,dayNum){
+  if(weekNum===1||isBreakWeek(weekNum)) return null;
+  return `Today: ${(dayNum%2===0)?'Intensive':'Light'} | Tomorrow: ${(dayNum%2===0)?'Light':'Intensive'}`;
+}
+function getPhaseInfo(weekNum){
+  if(weekNum===1) return 'WEEK 1: Detox program';
+  else if(weekNum<=3) return `WEEKS 2-3: Light routine (Week ${weekNum})`;
+  else if(weekNum<=8) return `WEEKS 4-8: Intensive routine (Week ${weekNum})`;
+  else { const cycleNumber=Math.floor((weekNum-9)/3)+1; const cyclePosition=((weekNum-9)%3)+1; return isBreakWeek(weekNum)? `CYCLE ${cycleNumber}: Break week` : `CYCLE ${cycleNumber}: Active week ${cyclePosition}/2`; }
+}
+
+function createProductCard(productNum){
+  return `<div class="product-item"><div class="product-image"><img src="img/${productNum}.png" alt="Product ${productNum}"></div></div>`;
+}
+
+function isToday(date){ return date.toDateString()===new Date().toDateString(); }
+function formatDateForInput(date){ return date.toISOString().split('T')[0]; }
+function formatDateDDMMYYYY(date){
+    const day = String(date.getDate()).padStart(2,'0');
+    const month = String(date.getMonth()+1).padStart(2,'0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+}
+function updateInterface(){
+  const dayOfProgram=getDayOfProgram(currentDate);
+  const weekOfProgram=getWeekOfProgram(currentDate);
+  const morningRoutine=getMorningRoutine(weekOfProgram);
+  const eveningRoutine=getEveningRoutine(weekOfProgram,dayOfProgram);
+  const eveningCycleInfo=getEveningCycleInfo(weekOfProgram,dayOfProgram);
+
+  dayNumber.textContent=dayOfProgram;
+  weekNumber.textContent=weekOfProgram;
+  dayOfWeek.textContent=getDayOfWeekName(currentDate);
+
+
+  if(isBreakWeek(weekOfProgram)){ currentWeekInfo.classList.add('hidden'); breakWeek.classList.remove('hidden'); }
+  else { currentWeekInfo.classList.remove('hidden'); breakWeek.classList.add('hidden'); currentWeekInfo.querySelector('h3').textContent=getPhaseInfo(weekOfProgram); }
+
+
+  morningProducts.innerHTML=morningRoutine.products.map(createProductCard).join('');
+  eveningProducts.innerHTML=eveningRoutine.products.map(createProductCard).join('');
+}
+
+prevDayBtn.addEventListener('click', () => {
+    const prev = new Date(currentDate);
+    prev.setDate(prev.getDate() - 1);
+    if(prev >= startDate){
+        currentDate = prev;
+        dateInput.value = formatDateDDMMYYYY(currentDate);
+        updateInterface();
+    }
+});
+
+nextDayBtn.addEventListener('click', () => {
+    const next = new Date(currentDate);
+    next.setDate(next.getDate() + 1);
+    currentDate = next;
+    
+    dateInput.value = formatDateDDMMYYYY(currentDate);
+    updateInterface();
+});
+updateInterface();
+</script>
+</body>
+</html>
