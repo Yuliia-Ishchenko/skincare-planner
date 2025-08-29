@@ -334,11 +334,14 @@ updateInterface();
 // Register service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const basePath = window.location.pathname.endsWith('/') 
-      ? window.location.pathname 
-      : window.location.pathname + '/';
-    navigator.serviceWorker.register(basePath + 'service-worker.js')
-      .then(reg => console.log('Service Worker registered:', reg))
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(reg => {
+        console.log('Service Worker registered:', reg);
+        // Optional: Show user that app works offline
+        if (reg.active) {
+          console.log('✅ App ready for offline use!');
+        }
+      })
       .catch(err => console.log('Service Worker failed:', err));
   });
 }
