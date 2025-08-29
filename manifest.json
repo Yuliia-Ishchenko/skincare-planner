@@ -1,0 +1,10 @@
+{
+  "name": "Skincare Planner",
+  "short_name": "Skincare",
+  "description": "Plan your daily skincare routines",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#1a1a1a"
+  
+}
