@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skincare Planner</title>
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a1a">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -331,20 +330,7 @@ nextDayBtn.addEventListener('click', () => {
 });
 updateInterface();
 
-// Register service worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => {
-        console.log('Service Worker registered:', reg);
-        // Optional: Show user that app works offline
-        if (reg.active) {
-          console.log('✅ App ready for offline use!');
-        }
-      })
-      .catch(err => console.log('Service Worker failed:', err));
-  });
-}
+
 </script>
 </body>
 </html>
