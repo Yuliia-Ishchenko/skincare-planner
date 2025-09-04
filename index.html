@@ -230,8 +230,9 @@ const routines = {
   Detox: { name: 'Detox', products:[3,1] },
   MorningLight:{ name:'Morning Light', products:[7,4,1] },
   EveningLight:{ name:'Evening Light', products:[7,1] },
-  MorningIntensive:{ name:'Morning Intensive', products:[7,4,9,6] },
-  EveningIntensive:{ name:'Evening Intensive', products:[2,5,8] }
+  MorningIntensive:{ name:'Morning Intensive', products:[7,4,9] },
+  EveningIntensive:{ name:'Evening Intensive', products:[2,5,8] },
+  EveningIntensivePlusMelanon:{ name:'Evening Intensive', products:[2,5,8,6] }
 };
 
 const startDate = new Date('2025-08-28');
@@ -257,15 +258,17 @@ function getDayOfWeekName(date){ return ['Sunday','Monday','Tuesday','Wednesday'
 function isBreakWeek(weekNum){ return weekNum>8 && (weekNum-8)%3===0; }
 
 function getMorningRoutine(weekNum){
-  if(weekNum===1) return routines.Detox;
-  else if(weekNum<=3) return routines.MorningLight;
-  else if(weekNum<=8) return routines.MorningIntensive;
-  else return isBreakWeek(weekNum)? routines.MorningLight : routines.MorningIntensive;
+  return routines.Detox
+  // if(weekNum===1) return routines.Detox;
+  // else if(weekNum<=3) return routines.MorningLight;
+  // else if(weekNum<=8) return routines.MorningIntensive;
+  // else return isBreakWeek(weekNum)? routines.MorningLight : routines.MorningIntensive;
 }
 function getEveningRoutine(weekNum,dayNum){
   if(weekNum===1) return routines.Detox;
-  else if(weekNum<=8) return (dayNum%2===0)? routines.EveningIntensive : routines.EveningLight;
-  else return isBreakWeek(weekNum)? routines.Detox : ((dayNum%2===0)? routines.EveningIntensive : routines.EveningLight);
+  else if(weekNum<=3) return (dayNum%2===0)? routines.EveningIntensive : routines.MorningLight;
+  else if(weekNum<=8) return (dayNum%2===0)? routines.EveningIntensivePlusMelanon : routines.MorningIntensive;
+  else return isBreakWeek(weekNum)? routines.Detox : ((dayNum%2===0)? routines.EveningIntensivePlusMelanon : routines.MorningIntensive);
 }
 function getEveningCycleInfo(weekNum,dayNum){
   if(weekNum===1||isBreakWeek(weekNum)) return null;
