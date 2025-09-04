@@ -267,6 +267,7 @@ function getMorningRoutine(weekNum){
 function getEveningRoutine(weekNum,dayNum){
   if(weekNum===1) return routines.Detox;
   else if(weekNum<=3) return (dayNum%2===0)? routines.EveningIntensive : routines.MorningLight;
+  else if(weekNum<=4) return (dayNum%2===0)? routines.EveningIntensive : routines.MorningIntensive;
   else if(weekNum<=8) return (dayNum%2===0)? routines.EveningIntensivePlusMelanon : routines.MorningIntensive;
   else return isBreakWeek(weekNum)? routines.Detox : ((dayNum%2===0)? routines.EveningIntensivePlusMelanon : routines.MorningIntensive);
 }
